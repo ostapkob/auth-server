@@ -7,7 +7,8 @@ var bcrypt = require("bcryptjs");
 const app = express();
 
 var corsOptions = {
-  origin: "http://192.168.99.107:8081"
+  // origin: "http://192.168.99.107:8081"
+  origin: "http://127.0.0.1:8081"
 };
 
 app.use(cors(corsOptions));
@@ -61,7 +62,7 @@ function initial() {
       invite: 'first',
       creatorInvite: 'I',
       // roles: ["admin", "manager", "user"],
-      password: bcrypt.hashSync('20Port20', 8)
+      password: bcrypt.hashSync('Port2020', 8)
       }).save(err => {
         if (err) {
           console.log("error", err);

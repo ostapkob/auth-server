@@ -7,6 +7,7 @@ const User = mongoose.model(
     email: String,
     password: String,
     invite: String,
+    date: Date,
     creatorInvite: String,
     roles: [
       {

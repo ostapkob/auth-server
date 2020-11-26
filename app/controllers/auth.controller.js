@@ -19,7 +19,6 @@ var bcrypt = require("bcryptjs");
 // }
 
 exports.signup = (req, res) => {
-  // creatorInvite(req.body.invite, function (result) {
   // i don't now how do this correct
   console.log(req.body)
   User.findOne({invite: req.body.invite}).exec((err, creator) => {
@@ -31,6 +30,7 @@ exports.signup = (req, res) => {
       username: req.body.username,
       email: req.body.email,
       invite: Math.random().toString(36).substring(3),
+      date: Date(),
       creatorInvite: creator.username, //creatorInvite('llylv6cye'),
       password: bcrypt.hashSync(req.body.password, 8)
     });
@@ -40,7 +40,8 @@ exports.signup = (req, res) => {
         return;
       }
       if (req.body.invite === undefined)  {
-        return res.status(404).send({ message: "Need an invite." });
+        // return res.status(404).send({ message: "Need an invite." });
+        return res.status(404).send({ message: "Нужно получить приглашение от уже зарегистрированного сотрудника." });
         return;
       }
       if (req.body.roles) {
@@ -61,7 +62,8 @@ exports.signup = (req, res) => {
                 return;
               }
 
-              res.send({ message: "User was registered successfully!" });
+              // res.send({ message: "User was registered successfully!" });
+              res.send({ message: "Вы успешно зарегистрированны." });
             });
           }
         );
@@ -79,19 +81,20 @@ exports.signup = (req, res) => {
               return;
             }
 
-            res.send({ message: "User was registered successfully!" });
+            // res.send({ message: "User was registered successfully!" });
+              res.send({ message: "Вы успешно зарегистрированны." });
           });
         });
       }
     });
-        
   })
-
 };
 
 exports.signin = (req, res) => {
+  console.log('-->', req.body)
   if (req.body.password === undefined || req.body.username ===undefined) {
     return res.status(400).send({ message: "Bad request keys: username or password." });
+    // return res.status(400).send({ message: "Такое имя пользователя уже существует" });
   }
   User.findOne({
     username: req.body.username
@@ -104,7 +107,8 @@ exports.signin = (req, res) => {
       }
 
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        // return res.status(404).send({ message: "User Not found." });
+        return res.status(404).send({ message: "Пользователь не найден." });
       }
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
@@ -114,12 +118,13 @@ exports.signin = (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!"
+          // message: "Invalid Password!"
+          message: "Не верный пароль."
         });
       }
 
       var token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400 // 24 hours
+        expiresIn: 3600*24 // 24 hours
       });
 
       var authorities = [];
@@ -131,6 +136,7 @@ exports.signin = (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        invite: user.invite,
         roles: authorities,
         accessToken: token
       });

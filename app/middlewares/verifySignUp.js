@@ -13,7 +13,8 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     }
 
     if (user) {
-      res.status(400).send({ message: "Failed! Username is already in use!" });
+      // res.status(400).send({ message: "Failed! Username is already in use!" });
+      res.status(400).send({ message: "Такое имя пользователя уже существует" });
       return;
     }
 
@@ -58,7 +59,6 @@ checkInvite = (req, res, next) => {
   //   return;
   // }
     
-    console.log(req.body)
     User.findOne({
       invite: req.body.invite
     }).exec((err, user) => {
@@ -67,9 +67,12 @@ checkInvite = (req, res, next) => {
         return;
       }
       if (!user) {
-        res.status(400).send({ message: `Failed! Invite not correct )` });
+        // res.status(400).send({ message: `Failed! Invite not correct )` });
+        res.status(400).send({ message: 'Ошибка. Код-приглашения не верен!' });
         return ;
       }
+        user.invite = Math.random().toString(36).substring(3);
+        user.save();
       next();
     });
 };
