@@ -28,7 +28,7 @@ exports.signup = (req, res) => {
       }
     const user = new User({
       username: req.body.username,
-      email: req.body.email,
+      // email: req.body.email,
       invite: Math.random().toString(36).substring(3),
       date: Date(),
       creatorInvite: creator.username, //creatorInvite('llylv6cye'),
@@ -135,7 +135,7 @@ exports.signin = (req, res) => {
       res.status(200).send({
         id: user._id,
         username: user.username,
-        email: user.email,
+        // email: user.email,
         invite: user.invite,
         roles: authorities,
         accessToken: token

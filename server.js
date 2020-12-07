@@ -7,8 +7,8 @@ var bcrypt = require("bcryptjs");
 const app = express();
 
 var corsOptions = {
-  // origin: "http://192.168.99.107:8081"
-  origin: "http://127.0.0.1:8081"
+  origin: "http://192.168.99.107:8081"
+  // origin: "http://127.0.0.1:8081"
 };
 
 app.use(cors(corsOptions));
@@ -58,7 +58,7 @@ function initial() {
     if (!err && count === 0) {
       new User({
       username: 'admin',
-      email: 'ostap666@yandex.ru',
+      // email: 'ostap666@yandex.ru',
       invite: 'first',
       creatorInvite: 'I',
       // roles: ["admin", "manager", "user"],
