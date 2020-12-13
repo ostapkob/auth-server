@@ -58,6 +58,13 @@ checkInvite = (req, res, next) => {
   //   });
   //   return;
   // }
+function makeInvite() {
+  var text = "";
+  var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i = 0; i < 10; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return text;
+}
     
     User.findOne({
       invite: req.body.invite
@@ -71,7 +78,7 @@ checkInvite = (req, res, next) => {
         res.status(400).send({ message: 'Ошибка. Код-приглашения не верен!' });
         return ;
       }
-        user.invite = Math.random().toString(36).substring(3);
+        user.invite = makeInvite();
         user.save();
       next();
     });

@@ -6,7 +6,6 @@ const Role = db.role;
 
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
-  console.log(req.headers)
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
@@ -26,7 +25,10 @@ isAdmin = (req, res, next) => {
       res.status(500).send({ message: err });
       return;
     }
-
+    if (user === null) {
+        res.status(403).send({ message: "Not this User" });
+        return;
+    }
     Role.find(
       {
         _id: { $in: user.roles }
@@ -48,6 +50,7 @@ isAdmin = (req, res, next) => {
         return;
       }
     );
+
   });
 };
 
@@ -58,6 +61,10 @@ isManager = (req, res, next) => {
       return;
     }
 
+    if (user === null) {
+        res.status(403).send({ message: "Not this User" });
+        return;
+    }
     Role.find(
       {
         _id: { $in: user.roles }

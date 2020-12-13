@@ -17,10 +17,16 @@ var bcrypt = require("bcryptjs");
 //     }
 //   })
 // }
+function makeInvite() {
+  var text = "";
+  var possible = "abcdefghijklmnopqrstuvwxyz0123456789";
+  for (var i = 0; i < 10; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return text;
+}
 
 exports.signup = (req, res) => {
   // i don't now how do this correct
-  console.log(req.body)
   User.findOne({invite: req.body.invite}).exec((err, creator) => {
       if (err) {
         res.status(500).send({ message: err });
@@ -29,7 +35,7 @@ exports.signup = (req, res) => {
     const user = new User({
       username: req.body.username,
       // email: req.body.email,
-      invite: Math.random().toString(36).substring(3),
+      invite: makeInvite(),
       date: Date(),
       creatorInvite: creator.username, //creatorInvite('llylv6cye'),
       password: bcrypt.hashSync(req.body.password, 8)
@@ -91,7 +97,6 @@ exports.signup = (req, res) => {
 };
 
 exports.signin = (req, res) => {
-  console.log('-->', req.body)
   if (req.body.password === undefined || req.body.username ===undefined) {
     return res.status(400).send({ message: "Bad request keys: username or password." });
     // return res.status(400).send({ message: "Такое имя пользователя уже существует" });
